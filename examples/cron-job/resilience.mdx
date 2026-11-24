@@ -53,11 +53,10 @@ from swarms.structs.cron_job import CronJob, CronJobExecutionError
 try:
     job.run("Fetch the latest reading.")
 except CronJobExecutionError as e:
-    # Only reached if the budget was exhausted. A clean stop() returns normally.
-    alert(f"Schedule died: {e}")
+    alert(f"Schedule failed: {e}")
 ```
 
-That distinction is the important part: a clean `stop()` returns, a job that gave up raises. You can tell them apart.
+A clean `stop()` makes `run()` return normally. `run()` raises `CronJobExecutionError` if it cannot schedule the task or if the job exhausts its error budget. The error message distinguishes these cases.
 
 ## Monitoring while it runs
 
